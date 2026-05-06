@@ -413,7 +413,16 @@ jobs:
             echo "✓ 已启用 ADIOS I/O 调度器支持"
           fi
           echo "✓ ADIOS I/O 调度器支持配置完成"
+      - name: 🔧 Add Droidspaces KABI Patch (修复无限重启)
+        if: ${{ env.ENABLE_DROIDSPACES == 'true' }}
+        working-directory: kernel_workspace/common
+        run: |
+          echo "开始应用 Droidspaces KABI 补丁，解决 struct 冲突..."
+          wget -O droidspaces.patch https://raw.githubusercontent.com/ravindu644/Droidspaces-OSS/main/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch
           
+          # 应用补丁，如果失败给出警告但不中断编译
+          patch -p1 --ignore-whitespace < droidspaces.patch || { echo "::error::Droidspaces 补丁应用失败，请检查源码树树差异"; exit 1; }
+          echo "✓ Droidspaces 容器化底层结构修复完成"    
       - name: ⚙️ apply lz4 lz4 1.10.0 & zstd 1.5.7 Patch (应用lz4 1.10.0 & zstd 1.5.7补丁)
         run: |
           echo "正在添加lz4 1.10.0 & zstd 1.5.7补丁…"
