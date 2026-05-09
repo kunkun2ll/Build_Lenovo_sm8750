@@ -498,8 +498,8 @@ jobs:
           cp ./susfs4ksu/kernel_patches/fs/* ./common/fs/
           cp ./susfs4ksu/kernel_patches/include/linux/* ./common/include/linux/
           cd ./common
-          patch -p1 < 50_add_susfs_in_gki-android15-6.6.patch || true
-          patch -p1 -N -F 3 < 69_hide_stuff.patch || true
+          patch -p1 < 50_add_susfs_in_gki-android15-6.6.patch
+          patch -p1 -N -F 3 < 69_hide_stuff.patch
           case "${{ env.KERNEL_VERSION }}" in
             6.6.56)
               echo "[INFO] 当前构建内核版本为6.6.56，正在修复 undeclared identifier 'vma' 编译错误"
